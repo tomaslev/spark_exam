@@ -4,8 +4,11 @@ from pyspark.conf import SparkConf
 import urllib.request as ur
 
 def file_dl(filename):
-    url = "https://assets-datascientest.s3.eu-west-1.amazonaws.com" + str(filename)
+    url = "https://assets-datascientest.s3.eu-west-1.amazonaws.com/" + filename
     ur.urlretrieve(url, filename)
+    
+file_dl("gps_app.csv")
+file_dl("gps_user.csv")
 
 sc = SparkContext.getOrCreate(conf=conf)
 
