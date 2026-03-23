@@ -43,3 +43,8 @@ for col in raw_user.columns:
 #Q.3.1 Replace missing values in the rating column with the mean or median. Justify your choice.
 #checking the skewdness of rating to determine whenther to use median or mean
 raw_app.filter(~isnan("rating")).select(skewness("rating")).show()
+
+#since skewdness is approx. 0.59 and therefore between -1 and 1, the correct replacement value is the mean
+rating_avg = raw_app.filter(~isnan("rating")).select(avg("rating")).head()["avg(rating)"]
+
+#now we can replace the NaN values with the average value of rating
