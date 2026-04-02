@@ -3,6 +3,13 @@ from pyspark import SparkContext
 from pyspark.conf import SparkConf
 from pyspark.sql.functions import *
 import urllib.request as ur
+import numpy as np
+from pyspark.sql.types import *
+
+#function to be able to quickly check nr of nan values
+def count_nulls(df):
+    for col in df.columns:
+        print("column:", col, "has", df.where(isnan(col) | isnull(col)).count(), "NaN")
 
 #Q.1. Using the urlretrieve function from the urllib.request module, write a download_file function to download a filename from the previously mentioned global address. Apply this function to the files we want to download.
 def file_dl(filename):
@@ -47,4 +54,7 @@ raw_app.filter(~isnan("rating")).select(skewness("rating")).show()
 #since skewdness is approx. 0.59 and therefore between -1 and 1, the correct replacement value is the mean
 rating_avg = raw_app.filter(~isnan("rating")).select(avg("rating")).head()["avg(rating)"]
 
+print(raw_app.where(isnull(raw_app["rating"])).count())
 #now we can replace the NaN values with the average value of rating
+raw_app_clean = raw_app.fillna(value=rating_avg, subset=["rating"])
+print(raw_app_clean.where(isnan(col("rating")) | isnull(col("rating"))).count())
