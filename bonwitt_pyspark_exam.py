@@ -68,3 +68,15 @@ raw_app.groupBy("type") \
   
 #most common value by far is "Free". Will replace missing values with this value.
 type_mode = raw_app.select(mode("type")).head()["mode(type)"] #extracting most common value: Free
+
+#Q.3.3 Display the unique values taken by the type column. What do you notice? Fix the issue. This will also resolve the missing values in the content_rating column.
+raw_app_clean = raw_app.withColumn(
+    "content_rating",
+    F.when(F.col("content_rating").isNull() | F.isnan(F.col("content_rating")) | (F.col("content_rating") == "NULL"), "Unrated")
+     .otherwise(F.col("content_rating"))
+)
+
+raw_app_clean.groupBy("content_rating") \
+  .count() \
+  .orderBy("count", ascending=False) \
+  .show()
