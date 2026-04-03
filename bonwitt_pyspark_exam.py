@@ -53,8 +53,18 @@ raw_app.filter(~isnan("rating")).select(skewness("rating")).show()
 
 #since skewdness is approx. 0.59 and therefore between -1 and 1, the correct replacement value is the mean
 rating_avg = raw_app.filter(~isnan("rating")).select(avg("rating")).head()["avg(rating)"]
-
 print(raw_app.where(isnull(raw_app["rating"])).count())
+
 #now we can replace the NaN values with the average value of rating
 raw_app_clean = raw_app.fillna(value=rating_avg, subset=["rating"])
 print(raw_app_clean.where(isnan(col("rating")) | isnull(col("rating"))).count())
+
+#Q.3.2 Replace the missing value in the type column with the most logical value. Justify your choice.
+#checking value counts in the type column
+raw_app.groupBy("type") \
+  .count() \
+  .orderBy("count", ascending=False) \
+  .show()
+  
+#most common value by far is "Free". Will replace missing values with this value.
+type_mode = raw_app.select(mode("type")).head()["mode(type)"] #extracting most common value: Free
