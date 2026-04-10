@@ -1,0 +1,5 @@
+to start jupyter:
+*activate venv: source /home/ubuntu/projects/spark/.pyspark/bin/activate
+*activate jupyter server: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token='' --NotebookApp.password=''
+*access jupyter from browser at http:/<liora_vm_ip>:8888/notebooks/exam_play.ipynb
+or at http://<liora_vm_ip>:8888/tree? Possily 8889 instead of 888
